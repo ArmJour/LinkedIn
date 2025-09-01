@@ -727,6 +727,8 @@ MonoBehaviour:
   gamePiecePrefab: {fileID: 1060094536059856858, guid: 791b0be844eb463468d1d774745467e5, type: 3}
   lineRenderer: {fileID: 570805209}
   connectionDistance: 1
+  linkSpacing: 0.6
+  followSmoothness: 100
   allPieceData:
   - {fileID: 11400000, guid: 0927c5efedf3ace4db05e806e7b149e5, type: 2}
   - {fileID: 11400000, guid: 83ba3c1d2c9e8344d942ce3384050ec9, type: 2}

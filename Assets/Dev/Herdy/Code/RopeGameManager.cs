@@ -4,16 +4,22 @@ using UnityEngine.InputSystem;
 
 public class RopeGameManager : MonoBehaviour
 {
+    [Header("Prefabs & Line Renderer")]
     public GameObject gamePiecePrefab;
-
-    [Header("Line Renderer")]
-    public LineRenderer lineRenderer;   // cuma 1 line renderer
+    public LineRenderer lineRenderer;
 
     [Header("Gameplay Settings")]
-    public float connectionDistance = 1.5f; // radius deteksi neighbor
-    public float linkSpacing = 0.6f;        // jarak antar piece yang ikut ketarik
-    public float followSmoothness = 10f;    // kehalusan gerakan follow
+    public float connectionDistance = 1.5f;
     public List<GamePieceData> allPieceData;
+
+    [Header("Spring Settings")]
+    public float springDistance = 0.6f;
+    public float springFrequency = 5f;
+    public float springDamping = 0.8f;
+
+    [Header("Drag Settings")]
+    [Range(0f, 1f)]
+    public float dragLerp = 0.2f; // smooth factor untuk drag origin
 
     private List<GameObject> allGamePieces;
     private List<GameObject> selectedChain;
@@ -22,7 +28,7 @@ public class RopeGameManager : MonoBehaviour
     private InputAction pointerPosition;
     private InputAction pointerPress;
     private bool isDragging = false;
-    private GameObject originPiece; // piece pertama yang di-drag
+    private GameObject originPiece;
 
     void Awake()
     {
@@ -56,31 +62,40 @@ public class RopeGameManager : MonoBehaviour
 
     void Update()
     {
-        if (isDragging && selectedChain.Count > 0)
+        if (isDragging && originPiece != null)
         {
-            // update line renderer
-            UpdateLineRenderer();
-
-            // cek dari lastPiece
-            GameObject lastPiece = selectedChain[selectedChain.Count - 1];
-            TryAddNeighbor(lastPiece);
-
-            // cek juga dari originPiece
-            if (originPiece != null)
+            // 🔹 Smooth drag origin
+            Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
+            Rigidbody2D rb = originPiece.GetComponent<Rigidbody2D>();
+            if (rb != null)
             {
-                TryAddNeighbor(originPiece);
+                Vector2 newPos = Vector2.Lerp(rb.position, pointerPos, dragLerp);
+                rb.MovePosition(newPos);
             }
 
-            // 🔹 Tarik semua piece agar mengikuti seperti di Cafe Mix
-            UpdateDraggedPieces();
-        }
-    }
+            // 🔹 Tambah neighbor baru dari origin
+            TryAddNeighbor(originPiece);
 
-    void LateUpdate()
-    {
-        if (selectedChain.Count > 0)
-        {
             UpdateLineRenderer();
+        }
+        for (int i = 0; i < allGamePieces.Count; i++)
+        {
+            for (int j = i + 1; j < allGamePieces.Count; j++)
+            {
+                Rigidbody2D rbA = allGamePieces[i].GetComponent<Rigidbody2D>();
+                Rigidbody2D rbB = allGamePieces[j].GetComponent<Rigidbody2D>();
+
+                Vector2 dir = rbA.position - rbB.position;
+                float distance = dir.magnitude;
+
+                float minDist = 0.5f; // jarak minimal antar node
+                if (distance < minDist && distance > 0)
+                {
+                    Vector2 repulse = dir.normalized * (minDist - distance) * 5f; // multiplier gaya tolakan
+                    rbA.AddForce(repulse);
+                    rbB.AddForce(-repulse);
+                }
+            }
         }
     }
 
@@ -100,7 +115,8 @@ public class RopeGameManager : MonoBehaviour
                 selectedChain.Clear();
                 selectedChain.Add(hitPiece);
                 currentPieceType = pieceScript.pieceData.pieceType;
-                originPiece = hitPiece; // simpan pusat
+                originPiece = hitPiece;
+
                 UpdateLineRenderer();
             }
         }
@@ -109,9 +125,33 @@ public class RopeGameManager : MonoBehaviour
     private void OnPointerUp(InputAction.CallbackContext context)
     {
         isDragging = false;
-        if (selectedChain.Count >= 2) // minimal 2 biar valid
+
+        // 🔹 Tutup ring
+        if (selectedChain.Count > 2)
+        {
+            GameObject first = selectedChain[0];
+            GameObject last = selectedChain[selectedChain.Count - 1];
+
+            SpringJoint2D joint = last.AddComponent<SpringJoint2D>();
+            joint.connectedBody = first.GetComponent<Rigidbody2D>();
+            joint.autoConfigureDistance = false;
+            joint.distance = springDistance;
+            joint.frequency = springFrequency;
+            joint.dampingRatio = springDamping;
+        }
+
+        if (selectedChain.Count >= 2)
         {
             ProcessChain();
+        }
+
+        // 🔹 Hapus semua joint agar board siap lagi
+        foreach (var piece in selectedChain)
+        {
+            foreach (var joint in piece.GetComponents<SpringJoint2D>())
+            {
+                Destroy(joint);
+            }
         }
 
         selectedChain.Clear();
@@ -121,33 +161,65 @@ public class RopeGameManager : MonoBehaviour
 
     void TryAddNeighbor(GameObject sourcePiece)
     {
-        Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
-        RaycastHit2D hit = Physics2D.Raycast(pointerPos, Vector2.zero);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(sourcePiece.transform.position, connectionDistance);
 
-        if (hit.collider != null)
+        GameObject closestPiece = null;
+        float closestDist = Mathf.Infinity;
+
+        foreach (var hit in hits)
         {
-            GameObject newPiece = hit.collider.gameObject;
-            GamePiece newPieceScript = newPiece.GetComponent<GamePiece>();
-
-            if (newPieceScript != null &&
-                newPieceScript.pieceData.pieceType == currentPieceType &&
-                !selectedChain.Contains(newPiece))
+            GamePiece newPieceScript = hit.GetComponent<GamePiece>();
+            if (newPieceScript != null)
             {
-                // pastikan dia neighbor (tidak terlalu jauh dari last piece)
-                float dist = Vector2.Distance(sourcePiece.transform.position, newPiece.transform.position);
-                if (dist <= connectionDistance)
+                GameObject newPiece = hit.gameObject;
+
+                if (newPieceScript.pieceData.pieceType == currentPieceType &&
+                    !selectedChain.Contains(newPiece))
                 {
-                    selectedChain.Add(newPiece);
-                    UpdateLineRenderer();
+                    float dist = Vector2.Distance(originPiece.transform.position, newPiece.transform.position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closestPiece = newPiece;
+                    }
                 }
             }
         }
-    }
 
+        if (closestPiece != null)
+        {
+            selectedChain.Add(closestPiece);
+
+            Rigidbody2D rbNew = closestPiece.GetComponent<Rigidbody2D>();
+            Rigidbody2D rbOrigin = originPiece.GetComponent<Rigidbody2D>();
+
+            // 🔹 Star: semua node terhubung ke origin
+            SpringJoint2D starJoint = closestPiece.AddComponent<SpringJoint2D>();
+            starJoint.connectedBody = rbOrigin;
+            starJoint.autoConfigureDistance = false;
+            starJoint.distance = springDistance;
+            starJoint.frequency = springFrequency;
+            starJoint.dampingRatio = springDamping;
+
+            // 🔹 Ring: hubungkan ke node terakhir dalam ring (chain)
+            if (selectedChain.Count > 1)
+            {
+                GameObject prevRing = selectedChain[selectedChain.Count - 2];
+                SpringJoint2D ringJoint = closestPiece.AddComponent<SpringJoint2D>();
+                ringJoint.connectedBody = prevRing.GetComponent<Rigidbody2D>();
+                ringJoint.autoConfigureDistance = false;
+                ringJoint.distance = springDistance;
+                ringJoint.frequency = springFrequency;
+                ringJoint.dampingRatio = springDamping;
+            }
+
+            UpdateLineRenderer();
+        }
+    }
 
     void PopulateBoard()
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 200; i++)
         {
             float x = Random.Range(-5f, 5f);
             float y = Random.Range(-3f, 3f);
@@ -162,58 +234,19 @@ public class RopeGameManager : MonoBehaviour
 
     void UpdateLineRenderer()
     {
-        if (originPiece == null) return;
+        if (selectedChain.Count == 0) return;
 
-        // total titik = rantai antar piece + garis pusat ke setiap piece (selain pusat)
-        int totalPoints = selectedChain.Count + (selectedChain.Count - 1) * 2;
-        lineRenderer.positionCount = totalPoints;
-
-        int index = 0;
-
-        // --- 1. Rantai antar piece ---
+        lineRenderer.positionCount = selectedChain.Count + (selectedChain.Count > 2 ? 1 : 0);
         for (int i = 0; i < selectedChain.Count; i++)
         {
-            lineRenderer.SetPosition(index, selectedChain[i].transform.position);
-            index++;
+            lineRenderer.SetPosition(i, selectedChain[i].transform.position);
         }
 
-        // --- 2. Tambahkan garis pusat ke setiap piece ---
-        for (int i = 1; i < selectedChain.Count; i++)
+        if (selectedChain.Count > 2)
         {
-            lineRenderer.SetPosition(index, originPiece.transform.position);
-            index++;
-            lineRenderer.SetPosition(index, selectedChain[i].transform.position);
-            index++;
+            lineRenderer.SetPosition(selectedChain.Count, selectedChain[0].transform.position);
         }
     }
-
-    /// <summary>
-    /// 🔹 Bikin semua piece dalam rantai ikut ketarik seperti Cafe Mix
-    /// </summary>
-    void UpdateDraggedPieces()
-    {
-        if (originPiece == null) return;
-
-        for (int i = 1; i < selectedChain.Count; i++)
-        {
-            GameObject prev = selectedChain[i - 1];
-            GameObject current = selectedChain[i];
-
-            Vector2 dir = (current.transform.position - prev.transform.position).normalized;
-            Vector2 targetPos = (Vector2)prev.transform.position + dir * linkSpacing;
-
-            Rigidbody2D rb = current.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.MovePosition(Vector2.Lerp(current.transform.position, targetPos, Time.deltaTime * followSmoothness));
-            }
-            else
-            {
-                current.transform.position = Vector2.Lerp(current.transform.position, targetPos, Time.deltaTime * followSmoothness);
-            }
-        }
-    }
-
 
     void ProcessChain()
     {
