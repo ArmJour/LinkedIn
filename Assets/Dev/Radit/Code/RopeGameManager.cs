@@ -1,28 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RopeGameManager : MonoBehaviour
 {
-    // The prefab for the game pieces.
     public GameObject gamePiecePrefab;
-    // The LineRenderer component to draw the rope.
     public LineRenderer lineRenderer;
-    // The distance limit for connecting pieces.
     public float connectionDistance = 1.5f;
-
-    // A list of all available GamePieceData Scriptable Objects.
     public List<GamePieceData> allPieceData;
 
-    // List to hold all game pieces on the board.
     private List<GameObject> allGamePieces;
-    // List to hold the currently selected pieces in the chain.
     private List<GameObject> selectedChain;
-    // The type of the starting piece in the chain.
     private string currentPieceType;
 
-    // A flag to check if the player is currently dragging.
+    private InputAction pointerPosition;
+    private InputAction pointerPress;
     private bool isDragging = false;
+
+    void Awake()
+    {
+        pointerPosition = new InputAction(type: InputActionType.PassThrough, binding: "<Pointer>/position");
+        pointerPress = new InputAction(type: InputActionType.Button, binding: "<Pointer>/press");
+    }
+
+    void OnEnable()
+    {
+        pointerPosition.Enable();
+        pointerPress.Enable();
+        pointerPress.started += OnPointerDown;
+        pointerPress.canceled += OnPointerUp;
+    }
+
+    void OnDisable()
+    {
+        pointerPosition.Disable();
+        pointerPress.Disable();
+        pointerPress.started -= OnPointerDown;
+        pointerPress.canceled -= OnPointerUp;
+    }
 
     void Start()
     {
@@ -34,30 +50,10 @@ public class RopeGameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (isDragging)
         {
-            isDragging = true;
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                GameObject hitPiece = hit.collider.gameObject;
-                GamePiece pieceScript = hitPiece.GetComponent<GamePiece>();
-
-                if (pieceScript != null)
-                {
-                    selectedChain.Add(hitPiece);
-                    currentPieceType = pieceScript.pieceData.pieceType;
-                    UpdateLineRenderer();
-                }
-            }
-        }
-
-        if (isDragging && Input.GetMouseButton(0))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
+            RaycastHit2D hit = Physics2D.Raycast(pointerPos, Vector2.zero);
 
             if (hit.collider != null)
             {
@@ -75,17 +71,38 @@ public class RopeGameManager : MonoBehaviour
                 }
             }
         }
+    }
 
-        if (Input.GetMouseButtonUp(0))
+    private void OnPointerDown(InputAction.CallbackContext context)
+    {
+        isDragging = true;
+        Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
+        RaycastHit2D hit = Physics2D.Raycast(pointerPos, Vector2.zero);
+
+        if (hit.collider != null)
         {
-            isDragging = false;
-            if (selectedChain.Count >= 3)
+            GameObject hitPiece = hit.collider.gameObject;
+            GamePiece pieceScript = hitPiece.GetComponent<GamePiece>();
+
+            if (pieceScript != null)
             {
-                ProcessChain();
+                selectedChain.Clear();
+                selectedChain.Add(hitPiece);
+                currentPieceType = pieceScript.pieceData.pieceType;
+                UpdateLineRenderer();
             }
-            selectedChain.Clear();
-            lineRenderer.positionCount = 0;
         }
+    }
+
+    private void OnPointerUp(InputAction.CallbackContext context)
+    {
+        isDragging = false;
+        if (selectedChain.Count >= 3)
+        {
+            ProcessChain();
+        }
+        selectedChain.Clear();
+        lineRenderer.positionCount = 0;
     }
 
     void PopulateBoard()
