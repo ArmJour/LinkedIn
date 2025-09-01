@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a55ab585581fd48b36ba82a3d4082e, type: 3}
+  m_Name: GamePiece2
+  m_EditorClassIdentifier: 
+  pieceType: Red
+  pieceSprite: {fileID: -2413806693520163455, guid: 10c7a19b34edb2c46b164aea03d2dbdd, type: 3}
+  pieceColor: {r: 1, g: 0, b: 0, a: 1}
