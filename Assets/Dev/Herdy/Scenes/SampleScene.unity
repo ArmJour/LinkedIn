@@ -704,7 +704,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 4
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
@@ -726,12 +726,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gamePiecePrefab: {fileID: 1060094536059856858, guid: 791b0be844eb463468d1d774745467e5, type: 3}
   lineRenderer: {fileID: 570805209}
-  connectionDistance: 1
-  linkSpacing: 0.6
-  followSmoothness: 100
+  connectionDistance: 0.1
   allPieceData:
   - {fileID: 11400000, guid: 0927c5efedf3ace4db05e806e7b149e5, type: 2}
   - {fileID: 11400000, guid: 83ba3c1d2c9e8344d942ce3384050ec9, type: 2}
+  ballAmount: 40
+  destroyDelay: 0.1
+  destroyPopScale: 1.5
+  destroyPopDuration: 0.2
+  popParticlePrefab: {fileID: 0}
+  linkPopScale: 1.5
+  linkPopDuration: 0.3
+  springDistance: 5
 --- !u!4 &570805211
 Transform:
   m_ObjectHideFlags: 0

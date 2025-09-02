@@ -1,25 +1,32 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class RopeGameManager : MonoBehaviour
 {
-    [Header("Prefabs & Line Renderer")]
     public GameObject gamePiecePrefab;
+
+    [Header("Line Renderer")]
     public LineRenderer lineRenderer;
 
     [Header("Gameplay Settings")]
     public float connectionDistance = 1.5f;
     public List<GamePieceData> allPieceData;
+    public int ballAmount = 100;
+
+    [Header("Destroy Settings")]
+    public float destroyDelay = 0.1f;
+    public float destroyPopScale = 1.5f;
+    public float destroyPopDuration = 0.2f;
+    public GameObject popParticlePrefab;
+
+    [Header("Link Settings")]
+    public float linkPopScale = 1.2f;
+    public float linkPopDuration = 0.15f;
 
     [Header("Spring Settings")]
     public float springDistance = 0.6f;
-    public float springFrequency = 5f;
-    public float springDamping = 0.8f;
-
-    [Header("Drag Settings")]
-    [Range(0f, 1f)]
-    public float dragLerp = 0.2f; // smooth factor untuk drag origin
 
     private List<GameObject> allGamePieces;
     private List<GameObject> selectedChain;
@@ -29,6 +36,9 @@ public class RopeGameManager : MonoBehaviour
     private InputAction pointerPress;
     private bool isDragging = false;
     private GameObject originPiece;
+    // Global lock to block any mouse / pointer interaction while destroy animation runs
+    public static bool InputBlocked { get; private set; }
+    
 
     void Awake()
     {
@@ -57,50 +67,32 @@ public class RopeGameManager : MonoBehaviour
         allGamePieces = new List<GameObject>();
         selectedChain = new List<GameObject>();
         lineRenderer.positionCount = 0;
-        PopulateBoard();
+        PopulateBoard(ballAmount);
     }
 
     void Update()
     {
         if (isDragging && originPiece != null)
         {
-            // 🔹 Smooth drag origin
             Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
             Rigidbody2D rb = originPiece.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                Vector2 newPos = Vector2.Lerp(rb.position, pointerPos, dragLerp);
-                rb.MovePosition(newPos);
+                rb.MovePosition(pointerPos);
             }
-
-            // 🔹 Tambah neighbor baru dari origin
-            TryAddNeighbor(originPiece);
 
             UpdateLineRenderer();
+            TryAddNeighbor(originPiece);
         }
-        for (int i = 0; i < allGamePieces.Count; i++)
+        else if (selectedChain.Count > 0)
         {
-            for (int j = i + 1; j < allGamePieces.Count; j++)
-            {
-                Rigidbody2D rbA = allGamePieces[i].GetComponent<Rigidbody2D>();
-                Rigidbody2D rbB = allGamePieces[j].GetComponent<Rigidbody2D>();
-
-                Vector2 dir = rbA.position - rbB.position;
-                float distance = dir.magnitude;
-
-                float minDist = 0.5f; // jarak minimal antar node
-                if (distance < minDist && distance > 0)
-                {
-                    Vector2 repulse = dir.normalized * (minDist - distance) * 5f; // multiplier gaya tolakan
-                    rbA.AddForce(repulse);
-                    rbB.AddForce(-repulse);
-                }
-            }
+            UpdateLineRenderer();
         }
     }
 
     private void OnPointerDown(InputAction.CallbackContext context)
     {
+    if (InputBlocked) return; // ignore while blocked
         isDragging = true;
         Vector2 pointerPos = Camera.main.ScreenToWorldPoint(pointerPosition.ReadValue<Vector2>());
         RaycastHit2D hit = Physics2D.Raycast(pointerPos, Vector2.zero);
@@ -124,39 +116,16 @@ public class RopeGameManager : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
+    if (InputBlocked) return; // ignore while blocked
         isDragging = false;
-
-        // 🔹 Tutup ring
-        if (selectedChain.Count > 2)
-        {
-            GameObject first = selectedChain[0];
-            GameObject last = selectedChain[selectedChain.Count - 1];
-
-            SpringJoint2D joint = last.AddComponent<SpringJoint2D>();
-            joint.connectedBody = first.GetComponent<Rigidbody2D>();
-            joint.autoConfigureDistance = false;
-            joint.distance = springDistance;
-            joint.frequency = springFrequency;
-            joint.dampingRatio = springDamping;
-        }
-
         if (selectedChain.Count >= 2)
         {
             ProcessChain();
         }
-
-        // 🔹 Hapus semua joint agar board siap lagi
-        foreach (var piece in selectedChain)
+        else
         {
-            foreach (var joint in piece.GetComponents<SpringJoint2D>())
-            {
-                Destroy(joint);
-            }
+            ClearChainImmediately();
         }
-
-        selectedChain.Clear();
-        lineRenderer.positionCount = 0;
-        originPiece = null;
     }
 
     void TryAddNeighbor(GameObject sourcePiece)
@@ -193,33 +162,32 @@ public class RopeGameManager : MonoBehaviour
             Rigidbody2D rbNew = closestPiece.GetComponent<Rigidbody2D>();
             Rigidbody2D rbOrigin = originPiece.GetComponent<Rigidbody2D>();
 
-            // 🔹 Star: semua node terhubung ke origin
-            SpringJoint2D starJoint = closestPiece.AddComponent<SpringJoint2D>();
+            DistanceJoint2D starJoint = closestPiece.AddComponent<DistanceJoint2D>();
             starJoint.connectedBody = rbOrigin;
             starJoint.autoConfigureDistance = false;
             starJoint.distance = springDistance;
-            starJoint.frequency = springFrequency;
-            starJoint.dampingRatio = springDamping;
+            starJoint.maxDistanceOnly = true;
 
-            // 🔹 Ring: hubungkan ke node terakhir dalam ring (chain)
             if (selectedChain.Count > 1)
             {
                 GameObject prevRing = selectedChain[selectedChain.Count - 2];
-                SpringJoint2D ringJoint = closestPiece.AddComponent<SpringJoint2D>();
+                DistanceJoint2D ringJoint = closestPiece.AddComponent<DistanceJoint2D>();
                 ringJoint.connectedBody = prevRing.GetComponent<Rigidbody2D>();
                 ringJoint.autoConfigureDistance = false;
                 ringJoint.distance = springDistance;
-                ringJoint.frequency = springFrequency;
-                ringJoint.dampingRatio = springDamping;
+                ringJoint.maxDistanceOnly = true;
             }
+
+            // 🔹 Pop animasi untuk piece baru masuk chain
+            StartCoroutine(PopLinkAnim(closestPiece));
 
             UpdateLineRenderer();
         }
     }
 
-    void PopulateBoard()
+    void PopulateBoard(int amount)
     {
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < amount; i++)
         {
             float x = Random.Range(-5f, 5f);
             float y = Random.Range(-3f, 3f);
@@ -234,27 +202,160 @@ public class RopeGameManager : MonoBehaviour
 
     void UpdateLineRenderer()
     {
-        if (selectedChain.Count == 0) return;
+        if (originPiece == null || selectedChain.Count < 2) return;
 
-        lineRenderer.positionCount = selectedChain.Count + (selectedChain.Count > 2 ? 1 : 0);
-        for (int i = 0; i < selectedChain.Count; i++)
+        int connectionCount = (selectedChain.Count - 1) * 2 + (selectedChain.Count - 1) * 2;
+        lineRenderer.positionCount = connectionCount;
+
+        int index = 0;
+
+        for (int i = 1; i < selectedChain.Count; i++)
         {
-            lineRenderer.SetPosition(i, selectedChain[i].transform.position);
+            if (selectedChain[i] != null)
+            {
+                lineRenderer.SetPosition(index, originPiece.transform.position);
+                index++;
+                lineRenderer.SetPosition(index, selectedChain[i].transform.position);
+                index++;
+            }
         }
 
-        if (selectedChain.Count > 2)
+        for (int i = 1; i < selectedChain.Count; i++)
         {
-            lineRenderer.SetPosition(selectedChain.Count, selectedChain[0].transform.position);
+            if (selectedChain[i - 1] != null && selectedChain[i] != null)
+            {
+                lineRenderer.SetPosition(index, selectedChain[i - 1].transform.position);
+                index++;
+                lineRenderer.SetPosition(index, selectedChain[i].transform.position);
+                index++;
+            }
         }
     }
 
     void ProcessChain()
     {
         Debug.Log("Chain of " + selectedChain.Count + " pieces cleared!");
-        foreach (GameObject piece in selectedChain)
+        StartCoroutine(DestroyChainCoroutine(selectedChain));
+    }
+
+    private IEnumerator DestroyChainCoroutine(List<GameObject> chain)
+    {
+    // Block further pointer interactions and dragging
+    InputBlocked = true;
+    isDragging = false;
+    // Disable input actions so they don't fire during animation
+    if (pointerPress.enabled) pointerPress.Disable();
+    if (pointerPosition.enabled) pointerPosition.Disable();
+
+        foreach (GameObject g in allGamePieces)
         {
-            allGamePieces.Remove(piece);
-            Destroy(piece);
+            if (g != null)
+            {
+                Rigidbody2D rb = g.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.bodyType = RigidbodyType2D.Static;
+            }
         }
+
+        foreach (GameObject piece in chain)
+        {
+            if (piece != null)
+            {
+                allGamePieces.Remove(piece);
+                yield return StartCoroutine(PopAndDestroy(piece));
+                yield return new WaitForSeconds(destroyDelay);
+            }
+        }
+
+        PopulateBoard(chain.Count);
+
+        lineRenderer.positionCount = 0;
+        originPiece = null;
+        selectedChain.Clear();
+
+        foreach (GameObject g in allGamePieces)
+        {
+            if (g != null)
+            {
+                Rigidbody2D rb = g.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
+
+    // Re-enable input actions after processing
+    if (!pointerPress.enabled) pointerPress.Enable();
+    if (!pointerPosition.enabled) pointerPosition.Enable();
+    InputBlocked = false;
+    }
+
+    private IEnumerator PopAndDestroy(GameObject piece)
+    {
+        Transform t = piece.transform;
+        Vector3 originalScale = t.localScale;
+        Vector3 targetScale = originalScale * destroyPopScale;
+
+        float elapsed = 0f;
+        while (elapsed < destroyPopDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / destroyPopDuration;
+            t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
+            yield return null;
+        }
+
+        elapsed = 0f;
+        while (elapsed < destroyPopDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / destroyPopDuration;
+            t.localScale = Vector3.Lerp(targetScale, Vector3.zero, progress);
+            UpdateLineRenderer();
+            yield return null;
+        }
+
+        if (popParticlePrefab != null)
+        {
+            Instantiate(popParticlePrefab, t.position, Quaternion.identity);
+        }
+
+        Destroy(piece);
+    }
+
+    private IEnumerator PopLinkAnim(GameObject piece)
+    {
+        Transform t = piece.transform;
+        Vector3 originalScale = t.localScale;
+        Vector3 targetScale = originalScale * linkPopScale;
+
+        float elapsed = 0f;
+        while (elapsed < linkPopDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / linkPopDuration;
+            t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
+            yield return null;
+        }
+
+        elapsed = 0f;
+        while (elapsed < linkPopDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / linkPopDuration;
+            t.localScale = Vector3.Lerp(targetScale, originalScale, progress);
+            yield return null;
+        }
+    }
+
+    void ClearChainImmediately()
+    {
+        foreach (var piece in selectedChain)
+        {
+            foreach (var joint in piece.GetComponents<DistanceJoint2D>())
+            {
+                Destroy(joint);
+            }
+        }
+        selectedChain.Clear();
+        lineRenderer.positionCount = 0;
+        originPiece = null;
     }
 }

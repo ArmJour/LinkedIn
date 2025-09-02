@@ -107,7 +107,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -216,4 +216,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a926ce6045e2f4fa133bc6fe896f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragSpeed: 10
+  dragSpeed: 3
+  maxDragDistance: 0.1
