@@ -8,5 +8,6 @@ public class GamePieceData : ScriptableObject
     // The sprite for this piece.
     public Sprite pieceSprite;
     // The color of the piece.
+    public int scoreValue;
     public Color pieceColor;
 }
