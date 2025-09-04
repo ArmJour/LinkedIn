@@ -2,18 +2,33 @@ using UnityEngine;
 
 public class GamePiece : MonoBehaviour
 {
-    // A public reference to the Scriptable Object containing the piece's data.
     public GamePieceData pieceData;
     private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // Ensure the piece has data and a SpriteRenderer component.
-        if (pieceData != null && spriteRenderer != null)
+
+        // Kalau sudah ada data bawaan di inspector
+        if (pieceData != null)
         {
-            spriteRenderer.sprite = pieceData.pieceSprite;
-            spriteRenderer.color = pieceData.pieceColor;
+            ApplyData(pieceData);
+        }
+    }
+
+    // Fungsi ini dipanggil setiap kali kita assign piece baru
+    public void SetData(GamePieceData data)
+    {
+        pieceData = data;
+        ApplyData(pieceData);
+    }
+
+    private void ApplyData(GamePieceData data)
+    {
+        if (data != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = data.pieceSprite;
+            spriteRenderer.color = data.pieceColor;
         }
     }
 }

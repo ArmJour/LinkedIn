@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 641717431115206619}
   - component: {fileID: 3797043897163764392}
   - component: {fileID: 8134166910993790034}
+  - component: {fileID: 4682089374333834014}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -106,7 +107,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -203,3 +204,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceData: {fileID: 11400000, guid: 0927c5efedf3ace4db05e806e7b149e5, type: 2}
+--- !u!114 &4682089374333834014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060094536059856858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a926ce6045e2f4fa133bc6fe896f03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragSpeed: 3
+  maxDragDistance: 0.1
