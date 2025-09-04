@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour
         if (remainingTime > 0)
         {
             remainingTime -= Time.deltaTime;
+            timerText.color = Color.white;  
         }
         else if (remainingTime < 0)
         {
@@ -19,7 +20,7 @@ public class Timer : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
-    
+
     public void Pause()
     {
         Time.timeScale = 0;

@@ -1,11 +1,13 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+
 public class GameManager : MonoBehaviour
 {
     public float initialTime = 60f;
     public float targetScoreMultiplier = 0.2f;
     public float timeMultiplier = 0.1f;
+    public int targetScore;
     public List<ApplicantData> applicants;
     public PlayerStats playerStats;
     public Timer gameTimer;
@@ -18,13 +20,14 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameTimer.Resume();
-        targetScoreText.text = "Target: " + applicants[Random.Range(0, applicants.Length)].scoreTarget * targetScoreMultiplier.ToString();
+        int applicant = Random.Range(0, applicants.Count);
+        targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
+        gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
+        targetScoreText.text = "Target: " + targetScore.ToString();
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
         gameOverScreen.SetActive(false);
         gameWinScreen.SetActive(false);
-        gameTimer.remainingTime = initialTime * playerStats.currentStage;
-
     }
 
     void Update()
@@ -41,9 +44,9 @@ public class GameManager : MonoBehaviour
             GameOver();
 
         }
-        else if (playerStats.currentScore >= (applicants[playerStats.currentStage - 1].scoreTarget * targetScoreMultiplier))
+        else if (playerStats.currentScore >= targetScore)
         {
-            AdvanceStage();
+            GameWin();
             gameWinScreen.SetActive(true);
         }
     }
@@ -52,17 +55,30 @@ public class GameManager : MonoBehaviour
     {
         gameTimer.Pause();
         gameOverScreen.SetActive(true);
+        Debug.Log("Game Over");
 
     }
-    
+
+    public void GameWin()
+    {
+        gameTimer.Pause();
+        gameWinScreen.SetActive(true);
+        Debug.Log("You Win!");
+    }
     public void AdvanceStage()
     {
         playerStats.AdvanceStage();
         gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         playerStats.currentScore = 0;
-        targetScoreText.text = "Target: " + (applicants[playerStats.currentStage - 1].scoreTarget * targetScoreMultiplier).ToString();
+        int applicant = Random.Range(0, applicants.Count);
+        targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
+        targetScoreText.text = "Target: " + targetScore.ToString();
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
     }
-    
+
+    public void ResetStats()
+    {
+        playerStats.ResetStats();
+    }
 }
