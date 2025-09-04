@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public List<ApplicantData> applicants;
     public PlayerStats playerStats;
     public Timer gameTimer;
+    public RopeGameManager ropeGameManager;
+    public Animator applicantAnimation;
     public GameObject gameOverScreen;
     public GameObject gameWinScreen;
     public TextMeshProUGUI targetScoreText;
@@ -21,6 +23,7 @@ public class GameManager : MonoBehaviour
     {
         gameTimer.Resume();
         int applicant = Random.Range(0, applicants.Count);
+        applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
         gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         targetScoreText.text = "Target: " + targetScore.ToString();
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
         if (gameTimer.remainingTime <= 0)
         {
             GameOver();
-
+            gameOverScreen.SetActive(true);
         }
         else if (playerStats.currentScore >= targetScore)
         {
@@ -71,14 +74,29 @@ public class GameManager : MonoBehaviour
         gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         playerStats.currentScore = 0;
         int applicant = Random.Range(0, applicants.Count);
+        applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
         targetScoreText.text = "Target: " + targetScore.ToString();
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
+        gameWinScreen.SetActive(false);
+        gameTimer.Resume();
+        ropeGameManager.ResetGamePieces();
     }
 
     public void ResetStats()
     {
         playerStats.ResetStats();
+        gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
+        playerStats.currentScore = 0;
+        int applicant = Random.Range(0, applicants.Count);
+        applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
+        targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
+        targetScoreText.text = "Target: " + targetScore.ToString();
+        currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
+        currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
+        gameOverScreen.SetActive(false);
+        gameTimer.Resume();
+        ropeGameManager.ResetGamePieces();
     }
 }

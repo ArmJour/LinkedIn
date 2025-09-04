@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: b175997448144a447893e2eb9e7342b0
+guid: 570714325456e4d44bff4ac19507e682
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5198175344861277539
-    second: Employee1_PasFoto0000_0
+      213: -3461723293940246716
+    second: target_score_0
+  - first:
+      213: 1714869636621106768
+    second: target_score_1
+  - first:
+      213: 4064157347913575972
+    second: target_score_2
+  - first:
+      213: -7882589751028097723
+    second: target_score_3
+  - first:
+      213: -2316398561972315583
+    second: target_score_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -72,7 +84,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -96,30 +108,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Employee1_PasFoto0000_0
+      name: target_score_0
       rect:
         serializedVersion: 2
-        x: 844
-        y: 0
-        width: 240
-        height: 250
+        x: 266
+        y: 803
+        width: 175
+        height: 264
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +127,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 36d66ae5fe0a32840800000000000000
-      internalID: 5198175344861277539
+      spriteID: 4471ff1510d75ffc0800000000000000
+      internalID: -3461723293940246716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: target_score_1
+      rect:
+        serializedVersion: 2
+        x: 1385
+        y: 854
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05e77e649d07cc710800000000000000
+      internalID: 1714869636621106768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: target_score_2
+      rect:
+        serializedVersion: 2
+        x: 1445
+        y: 859
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42eaea93399c66830800000000000000
+      internalID: 4064157347913575972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: target_score_3
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 725
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54dd5db926a6b9290800000000000000
+      internalID: -7882589751028097723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: target_score_4
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 299
+        width: 387
+        height: 421
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14a1a6bd7cf7adfd0800000000000000
+      internalID: -2316398561972315583
       vertices: []
       indices: 
       edges: []
@@ -148,7 +235,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Employee1_PasFoto0000_0: 5198175344861277539
+      target_score_0: -3461723293940246716
+      target_score_1: 1714869636621106768
+      target_score_2: 4064157347913575972
+      target_score_3: -7882589751028097723
+      target_score_4: -2316398561972315583
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

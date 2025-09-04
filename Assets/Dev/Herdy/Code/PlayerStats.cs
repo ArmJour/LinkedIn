@@ -11,7 +11,6 @@ public class PlayerStats : ScriptableObject
     public void ResetStats()
     {
         currentStage = 1;
-        stageAchieved = 1;
         currentScore = 0;
         totalScore = 0;
     }

@@ -17,6 +17,9 @@ public class RopeGameManager : MonoBehaviour
     public float connectionDistance = 1.5f;
     public List<GamePieceData> allPieceData;
     public int ballAmount = 100;
+    //ball spawn position range
+    public int positionX = 5;
+    public int positionY = 3;
 
     [Header("Destroy Settings")]
     public float destroyDelay = 0.1f;
@@ -41,7 +44,7 @@ public class RopeGameManager : MonoBehaviour
     private GameObject originPiece;
     // Global lock to block any mouse / pointer interaction while destroy animation runs
     public static bool InputBlocked { get; private set; }
-    
+
 
     void Awake()
     {
@@ -160,7 +163,7 @@ public class RopeGameManager : MonoBehaviour
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
-    if (InputBlocked) return; // ignore while blocked
+        if (InputBlocked) return; // ignore while blocked
         isDragging = false;
         if (selectedChain.Count >= 2)
         {
@@ -284,14 +287,16 @@ public class RopeGameManager : MonoBehaviour
 
     private IEnumerator DestroyChainCoroutine(List<GameObject> chain)
     {
-    // Block further pointer interactions and dragging
-    InputBlocked = true;
-    isDragging = false;
-    // Disable input actions so they don't fire during animation
-    if (pointerPress.enabled) pointerPress.Disable();
-    if (pointerPosition.enabled) pointerPosition.Disable();
+        // 🔒 Block input & dragging
+        InputBlocked = true;
+        isDragging = false;
 
-        foreach (GameObject g in allGamePieces)
+        // Matikan input sementara
+        if (pointerPress.enabled) pointerPress.Disable();
+        if (pointerPosition.enabled) pointerPosition.Disable();
+
+        // Semua piece jadi static dulu
+        foreach (GameObject g in new List<GameObject>(allGamePieces))
         {
             if (g != null)
             {
@@ -300,23 +305,33 @@ public class RopeGameManager : MonoBehaviour
             }
         }
 
-        foreach (GameObject piece in chain)
+        // 🔹 Loop di atas salinan supaya aman dari modifikasi list
+        List<GameObject> tempChain = new List<GameObject>(chain);
+
+        foreach (GameObject piece in tempChain)
         {
             if (piece != null)
             {
-                allGamePieces.Remove(piece);
+                // animasi pop & destroy
                 yield return StartCoroutine(PopAndDestroy(piece));
+
+                // baru hapus dari list asli
+                allGamePieces.Remove(piece);
+
                 yield return new WaitForSeconds(destroyDelay);
             }
         }
 
-        PopulateBoard(chain.Count);
+        // Spawn ulang sesuai jumlah yang hancur
+        PopulateBoard(tempChain.Count);
 
+        // Reset chain
         lineRenderer.positionCount = 0;
         originPiece = null;
         selectedChain.Clear();
 
-        foreach (GameObject g in allGamePieces)
+        // Semua piece balik jadi dynamic
+        foreach (GameObject g in new List<GameObject>(allGamePieces))
         {
             if (g != null)
             {
@@ -325,14 +340,19 @@ public class RopeGameManager : MonoBehaviour
             }
         }
 
-    // Re-enable input actions after processing
-    if (!pointerPress.enabled) pointerPress.Enable();
-    if (!pointerPosition.enabled) pointerPosition.Enable();
-    InputBlocked = false;
+        // Aktifkan input lagi
+        if (!pointerPress.enabled) pointerPress.Enable();
+        if (!pointerPosition.enabled) pointerPosition.Enable();
+        InputBlocked = false;
     }
+
 
     private IEnumerator PopAndDestroy(GameObject piece)
     {
+        if (piece == null)
+        {
+            yield break;
+        }
         Transform t = piece.transform;
         Vector3 originalScale = t.localScale;
         Vector3 targetScale = originalScale * destroyPopScale;
@@ -340,6 +360,10 @@ public class RopeGameManager : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < destroyPopDuration)
         {
+            if (piece == null)
+            {
+                yield break;
+            }
             elapsed += Time.deltaTime;
             float progress = elapsed / destroyPopDuration;
             t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
@@ -349,6 +373,10 @@ public class RopeGameManager : MonoBehaviour
         elapsed = 0f;
         while (elapsed < destroyPopDuration)
         {
+            if (piece == null)
+            {
+                yield break;
+            }
             elapsed += Time.deltaTime;
             float progress = elapsed / destroyPopDuration;
             t.localScale = Vector3.Lerp(targetScale, Vector3.zero, progress);
@@ -356,18 +384,24 @@ public class RopeGameManager : MonoBehaviour
             yield return null;
         }
 
-        if (popParticlePrefab != null)
+        if (popParticlePrefab != null && piece != null)
         {
             Instantiate(popParticlePrefab, t.position, Quaternion.identity);
         }
 
-        Destroy(piece);
-        playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue;
-        
+        if (piece != null)
+        {
+            playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue;
+            Destroy(piece);
+        }
     }
 
     private IEnumerator PopLinkAnim(GameObject piece)
     {
+        if (piece == null)
+        {
+            yield break;
+        }
         Transform t = piece.transform;
         Vector3 originalScale = t.localScale;
         Vector3 targetScale = originalScale * linkPopScale;
@@ -375,6 +409,10 @@ public class RopeGameManager : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < linkPopDuration)
         {
+            if (piece == null)
+            {
+                yield break;
+            }
             elapsed += Time.deltaTime;
             float progress = elapsed / linkPopDuration;
             t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
@@ -384,6 +422,10 @@ public class RopeGameManager : MonoBehaviour
         elapsed = 0f;
         while (elapsed < linkPopDuration)
         {
+            if (piece == null)
+            {
+                yield break;
+            }
             elapsed += Time.deltaTime;
             float progress = elapsed / linkPopDuration;
             t.localScale = Vector3.Lerp(targetScale, originalScale, progress);
@@ -403,5 +445,21 @@ public class RopeGameManager : MonoBehaviour
         selectedChain.Clear();
         lineRenderer.positionCount = 0;
         originPiece = null;
+    }
+    
+    public void ResetGamePieces()
+    {
+        foreach (GameObject g in allGamePieces)
+        {
+            if (g != null)
+            {
+                Destroy(g);
+            }
+        }
+        allGamePieces.Clear();
+        selectedChain.Clear();
+        lineRenderer.positionCount = 0;
+        originPiece = null;
+        PopulateBoard(ballAmount);
     }
 }

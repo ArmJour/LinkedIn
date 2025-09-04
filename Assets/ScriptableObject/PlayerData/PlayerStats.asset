@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93e026e48bbeb5740ba049994417c5b9, type: 3}
-  m_Name: ApplicantData
+  m_Script: {fileID: 11500000, guid: f13f0b3ea9342654db5ab9f579ce432f, type: 3}
+  m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  ApplicantType: Pelamar
-  ApplicantSprite: {fileID: -2413806693520163455, guid: 10c7a19b34edb2c46b164aea03d2dbdd, type: 3}
-  scoreTarget: 20000
+  currentStage: 1
+  stageAchieved: 1
+  currentScore: 300
+  totalScore: 0

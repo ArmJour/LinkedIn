@@ -7,6 +7,7 @@ public class BallDraggable : MonoBehaviour
     private bool isDragging = false;
     private Vector3 offset;
     private Camera mainCamera;
+    //private transform savedLocation;
 
     [Header("Drag Settings")]
     public float dragSpeed = 10f; 
@@ -35,6 +36,7 @@ public class BallDraggable : MonoBehaviour
     {
         if (isDragging)
         {
+            //if ()
             if (RopeGameManager.InputBlocked)
             {
                 StopDrag();
