@@ -362,6 +362,8 @@ public class RopeGameManager : MonoBehaviour
         }
 
         Destroy(piece);
+        playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue;
+        
     }
 
     private IEnumerator PopLinkAnim(GameObject piece)
