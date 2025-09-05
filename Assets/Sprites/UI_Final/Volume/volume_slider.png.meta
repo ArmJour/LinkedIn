@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 81b4daef4729e504984b8c88c42b678e
+guid: f8557091edaf33248ae1700866d54426
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7428071047311165248
-    second: bg_volume_0
+      213: 6484180897884859507
+    second: volume_slider_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bg_volume_0
+      name: volume_slider_0
       rect:
         serializedVersion: 2
-        x: 694
-        y: 488
-        width: 625
-        height: 101
+        x: 918
+        y: 473
+        width: 131
+        height: 130
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0c877a2fcb03ae890800000000000000
-      internalID: -7428071047311165248
+      spriteID: 37cecc50c207cf950800000000000000
+      internalID: 6484180897884859507
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: fe7cbb19d8672034297d359c9ed6afe6
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      bg_volume_0: -7428071047311165248
+      volume_slider_0: 6484180897884859507
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
