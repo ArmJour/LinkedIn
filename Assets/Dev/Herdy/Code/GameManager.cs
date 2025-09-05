@@ -19,12 +19,13 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI targetScoreText;
     public TextMeshProUGUI currentScoreText;
     public TextMeshProUGUI currentStageText;
+    private bool isGameFinished = false;
 
 
     void Start()
     {
-        gameTimer.Resume();
         int applicant = Random.Range(0, applicants.Count);
+        PlayVideo(applicant);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
         gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
@@ -35,23 +36,40 @@ public class GameManager : MonoBehaviour
         gameWinScreen.SetActive(false);
     }
 
+    void PlayVideo(int applicant)
+    {
+        videoPlayer.gameObject.SetActive(true);        
+        gameTimer.Pause();
+        videoPlayer.clip = applicants[applicant].applicantVideo;
+        videoPlayer.Play(); 
+        videoPlayer.loopPointReached += OnVideoEnd;
+    }
+    void OnVideoEnd(VideoPlayer vp)
+    {
+        videoPlayer.gameObject.SetActive(false);
+        gameTimer.Resume();
+    }
+
     void Update()
     {
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
+        CheckGameStatus();
     }
 
     public void CheckGameStatus()
     {
+        if (isGameFinished) return;
+
         if (gameTimer.remainingTime <= 0)
         {
+            isGameFinished = true;
             GameOver();
-            gameOverScreen.SetActive(true);
         }
         else if (playerStats.currentScore >= targetScore)
         {
+            isGameFinished = true;
             GameWin();
-            gameWinScreen.SetActive(true);
         }
     }
 
@@ -59,6 +77,7 @@ public class GameManager : MonoBehaviour
     {
         gameTimer.Pause();
         gameOverScreen.SetActive(true);
+        SoundManager.PlaySound(SoundType.Level_Lose);
 
         TextMeshProUGUI[] textComponents = gameOverScreen.GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -100,9 +119,11 @@ public class GameManager : MonoBehaviour
     }
     public void AdvanceStage()
     {
+        isGameFinished = false;
         playerStats.AdvanceStage();
         playerStats.currentScore = 0;
         int applicant = Random.Range(0, applicants.Count);
+        PlayVideo(applicant);
         gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
@@ -116,9 +137,11 @@ public class GameManager : MonoBehaviour
 
     public void ResetStats()
     {
+        isGameFinished = false;
         playerStats.ResetStats();
         playerStats.currentScore = 0;
         int applicant = Random.Range(0, applicants.Count);
+        PlayVideo(applicant);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));

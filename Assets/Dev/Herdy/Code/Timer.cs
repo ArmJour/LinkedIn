@@ -4,6 +4,8 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI timerText;
     [SerializeField] public float remainingTime;
+    public GameManager gameManager;
+
     void Update()
     {
         if (remainingTime > 0)

@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ApplicantType: Staff
   applicantAnimation: {fileID: 9100000, guid: a5cb0ecb34f5708479ead426400f38fb, type: 2}
+  applicantVideo: {fileID: 32900000, guid: cea31ba814eba1d44a546437310e6472, type: 3}
   scoreTarget: 20000
   timeLimit: 60

@@ -658,6 +658,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 50acae6c621e5fd4394a1b407abf72ed, type: 3}
   - {fileID: 8300000, guid: 4871d5129b9cd82499eebafa11345d8c, type: 3}
   - {fileID: 8300000, guid: ed59efcfd7916e343b2a3164a3636e8f, type: 3}
+  - {fileID: 8300000, guid: 6ec8c59e0480da44c8375c62ea04007c, type: 3}
+  - {fileID: 8300000, guid: 275f8b088dac1f74081fca29411aa6f0, type: 3}
   audioMixer: {fileID: 24300002, guid: 498c27ca1cb2144418e69ca42dbc511c, type: 2}
   audioSource: {fileID: 0}
   loopingSource: {fileID: 0}
@@ -1513,6 +1515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 1275583214}
   remainingTime: 7200
+  gameManager: {fileID: 0}
 --- !u!4 &404676715
 Transform:
   m_ObjectHideFlags: 0
@@ -2072,8 +2075,7 @@ MonoBehaviour:
   ballAmount: 50
   positionX: 5
   positionY: 3
-  totalChainDestroyTime: 0.01
-  destroyDelay: 0.1
+  totalChainDestroyTime: 0.3
   destroyPopScale: 1.5
   destroyPopDuration: 0.1
   popParticlePrefab: {fileID: 0}
@@ -2157,7 +2159,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 36123120}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 722607729}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2193,10 +2195,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -2627,7 +2629,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722607727}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 026bb537d31b6fe4388e21a85a3c6560, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -2665,7 +2667,8 @@ Transform:
   m_LocalPosition: {x: 230.43393, y: 162.86787, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 590454694}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &769975617
@@ -6994,5 +6997,4 @@ SceneRoots:
   - {fileID: 995987646}
   - {fileID: 861424903}
   - {fileID: 1355521314}
-  - {fileID: 590454694}
   - {fileID: 722607729}
