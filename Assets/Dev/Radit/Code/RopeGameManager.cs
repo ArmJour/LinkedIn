@@ -102,47 +102,56 @@ public class RopeGameManager : MonoBehaviour
 
     void ComboUpdate()
     {
+        if (InputBlocked) return;
+        
         if (selectedChain.Count == 0)
         {
             comboText.gameObject.SetActive(false);
             return;
         }
-        else if (selectedChain.Count < 5)
+
+        string comboName = "";
+        float scoreBonus = 0;
+
+        if (selectedChain.Count < 5)
         {
-            comboText.text = selectedChain.Count.ToString();
-            comboText.gameObject.SetActive(true);
             scoreMultiplier = 1f;
+            comboText.text = selectedChain.Count.ToString();
         }
-        else if (selectedChain.Count < 10)
+        else
         {
-            comboText.text = selectedChain.Count + "\nNice!";
-            comboText.gameObject.SetActive(true);
-            scoreMultiplier = 1.5f;
+            if (selectedChain.Count < 10)
+            {
+                comboName = "\nNice!";
+                scoreMultiplier = 1.5f;
+            }
+            else if (selectedChain.Count < 15)
+            {
+                comboName = "\nGG!";
+                scoreMultiplier = 2f;
+            }
+            else if (selectedChain.Count < 20)
+            {
+                comboName = "\nSheesh!";
+                scoreMultiplier = 2.5f;
+            }
+            else if (selectedChain.Count < 25)
+            {
+                comboName = "\nCrazy!";
+                scoreMultiplier = 3f;
+            }
+            else // > 25
+            {
+                comboName = "\nDayumm!!";
+                scoreMultiplier = 3.5f;
+            }
+            
+            // Asumsi base score per piece adalah 10 untuk tampilan di UI
+            scoreBonus = selectedChain.Count * 100 * scoreMultiplier; 
+            comboText.text = selectedChain.Count + comboName + "\n+" + scoreBonus.ToString("F0");
         }
-        else if (selectedChain.Count < 15)
-        {
-            comboText.text = selectedChain.Count + "\nGG!";
-            comboText.gameObject.SetActive(true);
-            scoreMultiplier = 2f;
-        }
-        else if (selectedChain.Count < 20)
-        {
-            comboText.text = selectedChain.Count + "\nSheesh!";
-            comboText.gameObject.SetActive(true);
-            scoreMultiplier = 2.5f;
-        }
-        else if (selectedChain.Count < 25)
-        {
-            comboText.text = selectedChain.Count + "\nCrazy!";
-            comboText.gameObject.SetActive(true);
-            scoreMultiplier = 3f;
-        }
-        else if (selectedChain.Count > 25)
-        {
-            comboText.text = selectedChain.Count + "\nDayumm!!";
-            comboText.gameObject.SetActive(true);
-            scoreMultiplier = 3.5f;
-        }
+        
+        comboText.gameObject.SetActive(true);
     }
 
     private void OnPointerDown(InputAction.CallbackContext context)
