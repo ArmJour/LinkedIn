@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93e026e48bbeb5740ba049994417c5b9, type: 3}
-  m_Name: ApplicantData
+  m_Name: Manager
   m_EditorClassIdentifier: 
-  ApplicantType: Pelamar
-  applicantAnimation: {fileID: 9100000, guid: d8499db11b343694eac3f0283ffc662c, type: 2}
-  scoreTarget: 5000
+  ApplicantType: Manager
+  applicantAnimation: {fileID: 9100000, guid: 50eb06a6e6cf9ae44a510fde7e15e3c7, type: 2}
+  scoreTarget: 40000
+  timeLimit: 100

@@ -365,17 +365,17 @@ public class RopeGameManager : MonoBehaviour
         Vector3 targetScale = originalScale * destroyPopScale;
 
         float elapsed = 0f;
-        while (elapsed < destroyPopDuration)
-        {
-            if (piece == null)
-            {
-                yield break;
-            }
-            elapsed += Time.deltaTime;
-            float progress = elapsed / destroyPopDuration;
-            t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
-            yield return null;
-        }
+        // while (elapsed < destroyPopDuration)
+        // {
+        //     if (piece == null)
+        //     {
+        //         yield break;
+        //     }
+        //     elapsed += Time.deltaTime;
+        //     float progress = elapsed / destroyPopDuration;
+        //     t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
+        //     yield return null;
+        // }
 
         elapsed = 0f;
         while (elapsed < destroyPopDuration)
@@ -390,6 +390,7 @@ public class RopeGameManager : MonoBehaviour
             UpdateLineRenderer();
             yield return null;
         }
+        SoundManager.PlaySound(SoundType.Pop_Up_Noise);
 
         if (popParticlePrefab != null && piece != null)
         {
@@ -425,6 +426,8 @@ public class RopeGameManager : MonoBehaviour
             t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
             yield return null;
         }
+
+        piece.GetComponentInChildren<SpriteRenderer>().sprite = piece.GetComponent<GamePiece>().pieceData.pieceSprite;
 
         elapsed = 0f;
         while (elapsed < linkPopDuration)
