@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
+//[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class BallDraggable : MonoBehaviour
 {
     private Rigidbody2D rb;

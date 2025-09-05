@@ -14,6 +14,7 @@ public class RopeGameManager : MonoBehaviour
     public LineRenderer lineRenderer;
 
     [Header("Gameplay Settings")]
+    public float scoreMultiplier;
     public float connectionDistance = 1.5f;
     public List<GamePieceData> allPieceData;
     public int ballAmount = 100;
@@ -109,31 +110,37 @@ public class RopeGameManager : MonoBehaviour
         {
             comboText.text = selectedChain.Count.ToString();
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 1f;
         }
         else if (selectedChain.Count < 10)
         {
             comboText.text = selectedChain.Count + "\nNice!";
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 1.5f;
         }
         else if (selectedChain.Count < 15)
         {
             comboText.text = selectedChain.Count + "\nGG!";
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 2f;
         }
         else if (selectedChain.Count < 20)
         {
             comboText.text = selectedChain.Count + "\nSheesh!";
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 2.5f;
         }
         else if (selectedChain.Count < 25)
         {
             comboText.text = selectedChain.Count + "\nCrazy!";
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 3f;
         }
         else if (selectedChain.Count > 25)
         {
             comboText.text = selectedChain.Count + "\nDayumm!!";
             comboText.gameObject.SetActive(true);
+            scoreMultiplier = 3.5f;
         }
     }
 
@@ -391,7 +398,7 @@ public class RopeGameManager : MonoBehaviour
 
         if (piece != null)
         {
-            playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue;
+            playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue * (int)scoreMultiplier;
             Destroy(piece);
         }
     }

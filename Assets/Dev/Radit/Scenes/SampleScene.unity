@@ -1920,16 +1920,19 @@ MonoBehaviour:
   playerStats: {fileID: 11400000, guid: ca795a37c1dd9c54a915ab3723b2c369, type: 2}
   comboText: {fileID: 319080781}
   lineRenderer: {fileID: 570805209}
-  connectionDistance: 0.1
+  scoreMultiplier: 0
+  connectionDistance: 0.5
   allPieceData:
   - {fileID: 11400000, guid: 0927c5efedf3ace4db05e806e7b149e5, type: 2}
   - {fileID: 11400000, guid: 83ba3c1d2c9e8344d942ce3384050ec9, type: 2}
+  - {fileID: 11400000, guid: a99b7c07bafe1ad4eb65cb577e69085c, type: 2}
+  - {fileID: 11400000, guid: b8ae451a899017a4296f194c7a7f2d53, type: 2}
   ballAmount: 40
   positionX: 5
   positionY: 3
   destroyDelay: 0.1
   destroyPopScale: 1.5
-  destroyPopDuration: 0.2
+  destroyPopDuration: 0.1
   popParticlePrefab: {fileID: 0}
   linkPopScale: 1.5
   linkPopDuration: 0.3

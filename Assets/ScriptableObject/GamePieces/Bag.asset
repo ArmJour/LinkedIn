@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22a55ab585581fd48b36ba82a3d4082e, type: 3}
-  m_Name: GamePiece2
+  m_Name: Bag
   m_EditorClassIdentifier: 
-  pieceType: Red
-  pieceSprite: {fileID: -2413806693520163455, guid: 10c7a19b34edb2c46b164aea03d2dbdd, type: 3}
+  pieceType: Bag
+  pieceSprite: {fileID: -2362717300387613220, guid: 60bd4e96e8ab0f04b978daafcfcd0ab8, type: 3}
   scoreValue: 100
-  pieceColor: {r: 1, g: 0, b: 0, a: 1}
+  pieceColor: {r: 1, g: 1, b: 1, a: 1}
