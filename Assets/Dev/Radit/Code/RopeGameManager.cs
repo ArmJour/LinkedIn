@@ -6,6 +6,7 @@ using TMPro;
 
 public class RopeGameManager : MonoBehaviour
 {
+    public GameManager gameManager;
     public GameObject gamePiecePrefab;
     public PlayerStats playerStats;
     public TextMeshProUGUI comboText;
@@ -23,6 +24,7 @@ public class RopeGameManager : MonoBehaviour
     public int positionY = 3;
 
     [Header("Destroy Settings")]
+    public float totalChainDestroyTime = 2f;
     public float destroyDelay = 0.1f;
     public float destroyPopScale = 1.5f;
     public float destroyPopDuration = 0.2f;
@@ -314,6 +316,7 @@ public class RopeGameManager : MonoBehaviour
 
         // 🔹 Loop di atas salinan supaya aman dari modifikasi list
         List<GameObject> tempChain = new List<GameObject>(chain);
+        float delayPerPiece = totalChainDestroyTime / tempChain.Count;
 
         foreach (GameObject piece in tempChain)
         {
@@ -325,7 +328,7 @@ public class RopeGameManager : MonoBehaviour
                 // baru hapus dari list asli
                 allGamePieces.Remove(piece);
 
-                yield return new WaitForSeconds(destroyDelay);
+                yield return new WaitForSeconds(delayPerPiece);
             }
         }
 
@@ -392,6 +395,7 @@ public class RopeGameManager : MonoBehaviour
         }
         SoundManager.PlaySound(SoundType.Pop_Up_Noise);
 
+
         if (popParticlePrefab != null && piece != null)
         {
             Instantiate(popParticlePrefab, t.position, Quaternion.identity);
@@ -400,6 +404,7 @@ public class RopeGameManager : MonoBehaviour
         if (piece != null)
         {
             playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue * (int)scoreMultiplier;
+            gameManager.CheckGameStatus();
             Destroy(piece);
         }
     }

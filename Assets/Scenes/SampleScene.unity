@@ -571,6 +571,57 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
+--- !u!1 &169892191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 169892193}
+  - component: {fileID: 169892192}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &169892192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169892191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88fe664736280f439c4209de3fda37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundList:
+  - {fileID: 8300000, guid: 50acae6c621e5fd4394a1b407abf72ed, type: 3}
+  - {fileID: 8300000, guid: 4871d5129b9cd82499eebafa11345d8c, type: 3}
+  - {fileID: 8300000, guid: ed59efcfd7916e343b2a3164a3636e8f, type: 3}
+  audioMixer: {fileID: 24300002, guid: 498c27ca1cb2144418e69ca42dbc511c, type: 2}
+  audioSource: {fileID: 0}
+  loopingSource: {fileID: 0}
+--- !u!4 &169892193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169892191}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.91967, y: 0.53461, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &209126253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1952,6 +2003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1dae6f41b633c4982a976b9702b3fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 785092311}
   gamePiecePrefab: {fileID: 1060094536059856858, guid: 791b0be844eb463468d1d774745467e5, type: 3}
   playerStats: {fileID: 11400000, guid: ca795a37c1dd9c54a915ab3723b2c369, type: 2}
   comboText: {fileID: 319080781}
@@ -1963,9 +2015,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 83ba3c1d2c9e8344d942ce3384050ec9, type: 2}
   - {fileID: 11400000, guid: a99b7c07bafe1ad4eb65cb577e69085c, type: 2}
   - {fileID: 11400000, guid: b8ae451a899017a4296f194c7a7f2d53, type: 2}
-  ballAmount: 40
+  ballAmount: 50
   positionX: 5
   positionY: 3
+  totalChainDestroyTime: 0.01
   destroyDelay: 0.1
   destroyPopScale: 1.5
   destroyPopDuration: 0.1
@@ -2418,7 +2471,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722607727}
   m_Enabled: 1
-  m_VideoClip: {fileID: 0}
+  m_VideoClip: {fileID: 32900000, guid: 026bb537d31b6fe4388e21a85a3c6560, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -2432,14 +2485,12 @@ VideoPlayer:
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources:
-  - {fileID: 0}
-  m_DirectAudioVolumes:
-  - 1
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
   m_Url: 
-  m_EnabledAudioTracks: 01
-  m_DirectAudioMutes: 00
-  m_ControlledAudioTrackCount: 1
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 0
@@ -2610,16 +2661,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbbf48a4f6ac6a4d9e74a9a759971df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialTime: 60
   targetScoreMultiplier: 0.2
   timeMultiplier: 0.1
   targetScore: 0
   applicants:
   - {fileID: 11400000, guid: 8c5e812aa3b9f6441bb6e44e2d5af829, type: 2}
+  - {fileID: 11400000, guid: 2144cb980bdf3c24cb0446c0d519644a, type: 2}
+  - {fileID: 11400000, guid: 7ead031e353886a479e891c0798ac7e5, type: 2}
+  - {fileID: 11400000, guid: 4c586144495acd3458b73edc3eb03dbd, type: 2}
   playerStats: {fileID: 11400000, guid: ca795a37c1dd9c54a915ab3723b2c369, type: 2}
   gameTimer: {fileID: 404676714}
   ropeGameManager: {fileID: 570805210}
   applicantAnimation: {fileID: 1678102854}
+  videoPlayer: {fileID: 722607728}
   gameOverScreen: {fileID: 2087042840}
   gameWinScreen: {fileID: 1428865151}
   targetScoreText: {fileID: 1902148207}
@@ -6798,6 +6852,7 @@ SceneRoots:
   - {fileID: 570805211}
   - {fileID: 1365155767}
   - {fileID: 1140900440}
+  - {fileID: 169892193}
   - {fileID: 995987646}
   - {fileID: 861424903}
   - {fileID: 1355521314}

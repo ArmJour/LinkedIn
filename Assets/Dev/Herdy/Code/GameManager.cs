@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Video;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     public Timer gameTimer;
     public RopeGameManager ropeGameManager;
     public Animator applicantAnimation;
+    public VideoPlayer videoPlayer;
     public GameObject gameOverScreen;
     public GameObject gameWinScreen;
     public TextMeshProUGUI targetScoreText;
@@ -37,7 +39,6 @@ public class GameManager : MonoBehaviour
     {
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
-        CheckGameStatus();
     }
 
     public void CheckGameStatus()
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
     {
         gameTimer.Pause();
         gameWinScreen.SetActive(true);
+        SoundManager.PlaySound(SoundType.Level_Win);
 
         TextMeshProUGUI[] textComponents = gameWinScreen.GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -94,7 +96,6 @@ public class GameManager : MonoBehaviour
                 textComponent.text += " " + playerStats.stageAchieved.ToString();
             }
         }
-
         Debug.Log("You Win!");
     }
     public void AdvanceStage()
