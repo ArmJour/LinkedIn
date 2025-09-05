@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93e026e48bbeb5740ba049994417c5b9, type: 3}
-  m_Name: ApplicantData 3
+  m_Name: Supervisor
   m_EditorClassIdentifier: 
-  ApplicantType: 
-  applicantAnimation: {fileID: 0}
-  scoreTarget: 0
+  ApplicantType: Supervisor
+  applicantAnimation: {fileID: 9100000, guid: 2e04814baf891414c9985c2809ac6468, type: 2}
+  scoreTarget: 30000
+  timeLimit: 80

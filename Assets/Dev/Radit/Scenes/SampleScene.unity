@@ -430,7 +430,6 @@ GameObject:
   - component: {fileID: 166479990}
   - component: {fileID: 166479992}
   - component: {fileID: 166479991}
-  - component: {fileID: 166479993}
   m_Layer: 0
   m_Name: Top
   m_TagString: Untagged
@@ -554,23 +553,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!111 &166479993
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 166479989}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: a3d3f1ea40357614f9461928fe04a53c, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a3d3f1ea40357614f9461928fe04a53c, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!1 &209126253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,7 +1903,7 @@ MonoBehaviour:
   comboText: {fileID: 319080781}
   lineRenderer: {fileID: 570805209}
   scoreMultiplier: 0
-  connectionDistance: 0.5
+  connectionDistance: 0.3
   allPieceData:
   - {fileID: 11400000, guid: 0927c5efedf3ace4db05e806e7b149e5, type: 2}
   - {fileID: 11400000, guid: 83ba3c1d2c9e8344d942ce3384050ec9, type: 2}
@@ -1982,6 +1964,57 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!1 &575742245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 575742247}
+  - component: {fileID: 575742246}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &575742246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575742245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88fe664736280f439c4209de3fda37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundList:
+  - {fileID: 8300000, guid: 50acae6c621e5fd4394a1b407abf72ed, type: 3}
+  - {fileID: 8300000, guid: 4871d5129b9cd82499eebafa11345d8c, type: 3}
+  - {fileID: 8300000, guid: ed59efcfd7916e343b2a3164a3636e8f, type: 3}
+  audioMixer: {fileID: 24300002, guid: 498c27ca1cb2144418e69ca42dbc511c, type: 2}
+  audioSource: {fileID: 0}
+  loopingSource: {fileID: 0}
+--- !u!4 &575742247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575742245}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.91967, y: 0.53461, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2148,7 +2181,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 703962643}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 785092311}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: AdvanceStage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &703962643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2352,12 +2397,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbbf48a4f6ac6a4d9e74a9a759971df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialTime: 60
   targetScoreMultiplier: 0.2
   timeMultiplier: 0.1
   targetScore: 0
   applicants:
   - {fileID: 11400000, guid: 8c5e812aa3b9f6441bb6e44e2d5af829, type: 2}
+  - {fileID: 11400000, guid: 2144cb980bdf3c24cb0446c0d519644a, type: 2}
+  - {fileID: 11400000, guid: 7ead031e353886a479e891c0798ac7e5, type: 2}
+  - {fileID: 11400000, guid: 4c586144495acd3458b73edc3eb03dbd, type: 2}
   playerStats: {fileID: 11400000, guid: ca795a37c1dd9c54a915ab3723b2c369, type: 2}
   gameTimer: {fileID: 404676714}
   ropeGameManager: {fileID: 570805210}
@@ -3990,8 +4037,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 00:00
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3576940afeafbb642813b316b16ae689, type: 2}
-  m_sharedMaterial: {fileID: 796013423229518709, guid: 3576940afeafbb642813b316b16ae689, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 705a51162867f4c4c8201272ca778a42, type: 2}
+  m_sharedMaterial: {fileID: 5608011823624455410, guid: 705a51162867f4c4c8201272ca778a42, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4015,7 +4062,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75.15
+  m_fontSize: 56.5
   m_fontSizeBase: 106
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4053,7 +4100,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -17.256912, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4098,7 +4145,6 @@ GameObject:
   - component: {fileID: 1281084253}
   - component: {fileID: 1281084252}
   - component: {fileID: 1281084251}
-  - component: {fileID: 1281084254}
   m_Layer: 5
   m_Name: Texts
   m_TagString: Untagged
@@ -4193,23 +4239,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
---- !u!111 &1281084254
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281084249}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: a3d3f1ea40357614f9461928fe04a53c, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a3d3f1ea40357614f9461928fe04a53c, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!1 &1282083500
 GameObject:
   m_ObjectHideFlags: 0
@@ -6334,6 +6363,7 @@ SceneRoots:
   - {fileID: 404676715}
   - {fileID: 785092312}
   - {fileID: 570805211}
+  - {fileID: 575742247}
   - {fileID: 1365155767}
   - {fileID: 995987646}
   - {fileID: 861424903}

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public float initialTime = 60f;
     public float targetScoreMultiplier = 0.2f;
     public float timeMultiplier = 0.1f;
     public int targetScore;
@@ -19,13 +18,14 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI currentScoreText;
     public TextMeshProUGUI currentStageText;
 
+
     void Start()
     {
         gameTimer.Resume();
         int applicant = Random.Range(0, applicants.Count);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
-        gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
+        gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         targetScoreText.text = "Target: " + targetScore.ToString();
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
@@ -58,22 +58,51 @@ public class GameManager : MonoBehaviour
     {
         gameTimer.Pause();
         gameOverScreen.SetActive(true);
-        Debug.Log("Game Over");
 
+        TextMeshProUGUI[] textComponents = gameOverScreen.GetComponentsInChildren<TextMeshProUGUI>();
+
+        foreach (var textComponent in textComponents)
+        {
+            if (textComponent.text == "Current Stage:")
+            {
+                textComponent.text += " " + playerStats.currentStage.ToString();
+            }
+            else if (textComponent.text == "Highest Stage:")
+            {
+                textComponent.text += " " + playerStats.stageAchieved.ToString();
+            }
+        }
+
+        Debug.Log("Game Over");
     }
 
     public void GameWin()
     {
         gameTimer.Pause();
         gameWinScreen.SetActive(true);
+
+        TextMeshProUGUI[] textComponents = gameWinScreen.GetComponentsInChildren<TextMeshProUGUI>();
+
+        foreach (var textComponent in textComponents)
+        {
+            if (textComponent.text == "Current Stage:")
+            {
+                textComponent.text += " " + playerStats.currentStage.ToString();
+            }
+            else if (textComponent.text == "Highest Stage:")
+            {
+                textComponent.text += " " + playerStats.stageAchieved.ToString();
+            }
+        }
+
         Debug.Log("You Win!");
     }
     public void AdvanceStage()
     {
         playerStats.AdvanceStage();
-        gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         playerStats.currentScore = 0;
         int applicant = Random.Range(0, applicants.Count);
+        gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
         targetScoreText.text = "Target: " + targetScore.ToString();
@@ -87,10 +116,10 @@ public class GameManager : MonoBehaviour
     public void ResetStats()
     {
         playerStats.ResetStats();
-        gameTimer.remainingTime = initialTime * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         playerStats.currentScore = 0;
         int applicant = Random.Range(0, applicants.Count);
         applicantAnimation.runtimeAnimatorController = applicants[applicant].applicantAnimation;
+        gameTimer.remainingTime = applicants[applicant].timeLimit * (1 + (playerStats.currentStage - 1) * timeMultiplier);
         targetScore = (int)(applicants[applicant].scoreTarget * (1 + (playerStats.currentStage - 1) * targetScoreMultiplier));
         targetScoreText.text = "Target: " + targetScore.ToString();
         currentScoreText.text = "Score: " + playerStats.currentScore.ToString();
