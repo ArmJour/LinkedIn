@@ -1997,7 +1997,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 50acae6c621e5fd4394a1b407abf72ed, type: 3}
   - {fileID: 8300000, guid: 4871d5129b9cd82499eebafa11345d8c, type: 3}
   - {fileID: 8300000, guid: ed59efcfd7916e343b2a3164a3636e8f, type: 3}
-  audioMixer: {fileID: 0}
+  audioMixer: {fileID: 24300002, guid: 498c27ca1cb2144418e69ca42dbc511c, type: 2}
   audioSource: {fileID: 0}
   loopingSource: {fileID: 0}
 --- !u!4 &575742247
@@ -2181,7 +2181,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 703962643}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 785092311}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: AdvanceStage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &703962643
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
         currentStageText.text = "Stage: " + playerStats.currentStage.ToString();
         gameOverScreen.SetActive(false);
         gameWinScreen.SetActive(false);
-        SoundManager.PlayLoopingSound(SoundType.Background_Music);
     }
 
     void Update()
@@ -75,7 +74,6 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("Game Over");
-        SoundManager.StopLoopingSound();
     }
 
     public void GameWin()
@@ -98,7 +96,6 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("You Win!");
-        SoundManager.StopLoopingSound();
     }
     public void AdvanceStage()
     {
@@ -114,7 +111,6 @@ public class GameManager : MonoBehaviour
         gameWinScreen.SetActive(false);
         gameTimer.Resume();
         ropeGameManager.ResetGamePieces();
-        SoundManager.PlayLoopingSound(SoundType.Background_Music);
     }
 
     public void ResetStats()
@@ -131,6 +127,5 @@ public class GameManager : MonoBehaviour
         gameOverScreen.SetActive(false);
         gameTimer.Resume();
         ropeGameManager.ResetGamePieces();
-        SoundManager.PlayLoopingSound(SoundType.Background_Music);
     }
 }

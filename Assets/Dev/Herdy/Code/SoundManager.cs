@@ -23,7 +23,10 @@ public class SoundManager : MonoBehaviour
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         loopingSource = gameObject.AddComponent<AudioSource>();
-        loopingSource.loop = true; 
+        loopingSource.loop = true;
+
+        audioSource.outputAudioMixerGroup = audioMixer;
+        loopingSource.outputAudioMixerGroup = audioMixer;
     }
 
     public static void PlaySound(SoundType soundType) 
