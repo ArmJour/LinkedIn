@@ -4,7 +4,9 @@ public enum SoundType
 {
     Background_Music,
     Pop_Up_Noise,
-    Level_Win
+    Level_Win,
+    Combo_Clear,
+    Level_Lose
 }
 
 public class SoundManager : MonoBehaviour

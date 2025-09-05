@@ -24,8 +24,7 @@ public class RopeGameManager : MonoBehaviour
     public int positionY = 3;
 
     [Header("Destroy Settings")]
-    public float totalChainDestroyTime = 2f;
-    public float destroyDelay = 0.1f;
+    public float totalChainDestroyTime = 2f; // waktu total, apapun jumlah chain
     public float destroyPopScale = 1.5f;
     public float destroyPopDuration = 0.2f;
     public GameObject popParticlePrefab;
@@ -316,21 +315,26 @@ public class RopeGameManager : MonoBehaviour
 
         // 🔹 Loop di atas salinan supaya aman dari modifikasi list
         List<GameObject> tempChain = new List<GameObject>(chain);
-        float delayPerPiece = totalChainDestroyTime / tempChain.Count;
+
+        // Hitung delay per piece agar total waktunya selalu sama
+        // Hitung delay per piece agar total waktunya selalu sama,
+        // dengan mempertimbangkan destroyPopDuration juga
+        float delayPerPiece = (totalChainDestroyTime - destroyPopDuration) / tempChain.Count;
 
         foreach (GameObject piece in tempChain)
         {
             if (piece != null)
             {
-                // animasi pop & destroy
+                // Pop animasi (sudah memakan destroyPopDuration)
                 yield return StartCoroutine(PopAndDestroy(piece));
-
-                // baru hapus dari list asli
                 allGamePieces.Remove(piece);
 
-                yield return new WaitForSeconds(delayPerPiece);
+                // Tambahkan sisa delay, tapi jangan negatif
+                if (delayPerPiece > 0)
+                    yield return new WaitForSeconds(delayPerPiece);
             }
         }
+
 
         // Spawn ulang sesuai jumlah yang hancur
         PopulateBoard(tempChain.Count);
@@ -368,17 +372,6 @@ public class RopeGameManager : MonoBehaviour
         Vector3 targetScale = originalScale * destroyPopScale;
 
         float elapsed = 0f;
-        // while (elapsed < destroyPopDuration)
-        // {
-        //     if (piece == null)
-        //     {
-        //         yield break;
-        //     }
-        //     elapsed += Time.deltaTime;
-        //     float progress = elapsed / destroyPopDuration;
-        //     t.localScale = Vector3.Lerp(originalScale, targetScale, progress);
-        //     yield return null;
-        // }
 
         elapsed = 0f;
         while (elapsed < destroyPopDuration)
@@ -394,7 +387,6 @@ public class RopeGameManager : MonoBehaviour
             yield return null;
         }
         SoundManager.PlaySound(SoundType.Pop_Up_Noise);
-
 
         if (popParticlePrefab != null && piece != null)
         {
