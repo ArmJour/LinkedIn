@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStage: 1
   stageAchieved: 1
-  currentScore: 300
+  currentScore: 0
   totalScore: 0
