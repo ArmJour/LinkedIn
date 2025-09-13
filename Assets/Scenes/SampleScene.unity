@@ -1205,6 +1205,7 @@ GameObject:
   - component: {fileID: 359756371}
   - component: {fileID: 359756370}
   - component: {fileID: 359756374}
+  - component: {fileID: 359756375}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -1296,7 +1297,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 359756372}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 359756375}
+        m_TargetAssemblyTypeName: CanvasOff, Assembly-CSharp
+        m_MethodName: onclick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &359756372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,6 +1361,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneName: MainMenu
+--- !u!114 &359756375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359756368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51744cd8d249b643b2670e48c2f20c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Panel: {fileID: 2087042840}
 --- !u!1 &381233591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2706,7 +2732,7 @@ MonoBehaviour:
   panelIn: {fileID: 883588967}
   panelOut: {fileID: 1957307171}
   duration: 1
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 519420032}
 --- !u!114 &769975619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2768,7 +2794,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!224 &769975622
 RectTransform:
@@ -3176,7 +3202,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 15
   m_TargetDisplay: 0
 --- !u!224 &861424903
 RectTransform:
@@ -3217,6 +3243,7 @@ GameObject:
   - component: {fileID: 874876284}
   - component: {fileID: 874876283}
   - component: {fileID: 874876285}
+  - component: {fileID: 874876286}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -3290,6 +3317,18 @@ MonoBehaviour:
       - m_Target: {fileID: 874876285}
         m_TargetAssemblyTypeName: TimeScale, Assembly-CSharp
         m_MethodName: onClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 874876286}
+        m_TargetAssemblyTypeName: CanvasOff, Assembly-CSharp
+        m_MethodName: onclick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3384,6 +3423,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860fbe60321deea44bffaca23602d24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &874876286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874876278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51744cd8d249b643b2670e48c2f20c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Panel: {fileID: 861424899}
 --- !u!1 &883588967
 GameObject:
   m_ObjectHideFlags: 0
@@ -4086,6 +4138,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 861424899}
+  winPanel: {fileID: 1428865151}
+  losePanel: {fileID: 2087042840}
 --- !u!4 &1140900440
 Transform:
   m_ObjectHideFlags: 0
@@ -6111,6 +6165,7 @@ GameObject:
   - component: {fileID: 1871756807}
   - component: {fileID: 1871756806}
   - component: {fileID: 1871756810}
+  - component: {fileID: 1871756811}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -6202,7 +6257,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1871756808}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1871756811}
+        m_TargetAssemblyTypeName: CanvasOff, Assembly-CSharp
+        m_MethodName: onclick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1871756808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6254,6 +6321,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneName: MainMenu
+--- !u!114 &1871756811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871756804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51744cd8d249b643b2670e48c2f20c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Panel: {fileID: 1428865151}
 --- !u!1 &1902148204
 GameObject:
   m_ObjectHideFlags: 0
