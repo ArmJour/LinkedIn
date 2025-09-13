@@ -404,7 +404,7 @@ public class RopeGameManager : MonoBehaviour
 
         if (piece != null)
         {
-            playerStats.currentScore += piece.GetComponent<GamePiece>().pieceData.scoreValue * (int)scoreMultiplier;
+            playerStats.currentScore += (int) (piece.GetComponent<GamePiece>().pieceData.scoreValue * scoreMultiplier);
             gameManager.CheckGameStatus();
             Destroy(piece);
         }
