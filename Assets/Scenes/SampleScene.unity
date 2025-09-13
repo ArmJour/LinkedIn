@@ -2108,6 +2108,7 @@ MonoBehaviour:
   linkPopScale: 1.5
   linkPopDuration: 0.3
   springDistance: 5
+  allGamePieces: []
 --- !u!4 &570805211
 Transform:
   m_ObjectHideFlags: 0
@@ -2249,7 +2250,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
