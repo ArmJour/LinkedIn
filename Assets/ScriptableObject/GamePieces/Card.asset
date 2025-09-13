@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Card
   m_EditorClassIdentifier: 
   pieceType: Card
-  pieceSprite: {fileID: 9005720656697272912, guid: 214cb139c09edb54fbfa52e32ab59fbc, type: 3}
+  pieceSprite: {fileID: 6977347928971888156, guid: 214cb139c09edb54fbfa52e32ab59fbc, type: 3}
   scoreValue: 100
   pieceColor: {r: 1, g: 1, b: 1, a: 1}

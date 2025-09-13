@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Bag
   m_EditorClassIdentifier: 
   pieceType: Bag
-  pieceSprite: {fileID: -2362717300387613220, guid: 60bd4e96e8ab0f04b978daafcfcd0ab8, type: 3}
+  pieceSprite: {fileID: 2874437466798715695, guid: 60bd4e96e8ab0f04b978daafcfcd0ab8, type: 3}
   scoreValue: 100
   pieceColor: {r: 1, g: 1, b: 1, a: 1}
