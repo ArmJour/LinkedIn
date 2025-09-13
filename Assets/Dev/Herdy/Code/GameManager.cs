@@ -83,13 +83,13 @@ public class GameManager : MonoBehaviour
 
         foreach (var textComponent in textComponents)
         {
-            if (textComponent.text == "Current Stage:")
+            if (textComponent.text.Contains("Current Stage:"))
             {
-                textComponent.text += " " + playerStats.currentStage.ToString();
+                textComponent.text = "Current Stage: " + playerStats.currentStage.ToString();
             }
-            else if (textComponent.text == "Highest Stage:")
+            else if (textComponent.text.Contains("Highest Stage:"))
             {
-                textComponent.text += " " + playerStats.stageAchieved.ToString();
+                textComponent.text = "Highest Stage: " + playerStats.stageAchieved.ToString();
             }
         }
 
@@ -106,13 +106,15 @@ public class GameManager : MonoBehaviour
 
         foreach (var textComponent in textComponents)
         {
-            if (textComponent.text == "Current Stage:")
+            if (textComponent.text.Contains("Current Stage:"))
             {
-                textComponent.text += " " + playerStats.currentStage.ToString();
+                Debug.Log("Current Stage Text Found");      
+                textComponent.text = "Current Stage: " + playerStats.currentStage.ToString();
             }
-            else if (textComponent.text == "Highest Stage:")
+            else if (textComponent.text.Contains("Highest Stage:"))
             {
-                textComponent.text += " " + playerStats.stageAchieved.ToString();
+                Debug.Log("Highest Stage Text Found");
+                textComponent.text = "Highest Stage: " + playerStats.stageAchieved.ToString();
             }
         }
         Debug.Log("You Win!");
